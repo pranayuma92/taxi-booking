@@ -4,14 +4,14 @@ import storage from 'redux-persist/lib/storage'
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
 import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import { luggage } from './reducers'
+import { reservation } from './reducers'
 
 const reducers = {
-    luggage
+    reservation
 }
 
 const persistConfig = {
-    key: 'root',
+    key: 'reserveData',
     storage,
     stateReconciler: autoMergeLevel2
 }

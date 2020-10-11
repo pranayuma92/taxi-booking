@@ -1,41 +1,62 @@
 const initialState = {
+    distance: 0,
+    duration: 0,
     price: 0,
-    size: '',
-    total: 0,
-    qty: 0,
-    reservation: {}
+    pickup: '',
+    dropoff: '',
+    origin: '',
+    destination: '',
+    center: '',
+    userLocation: {}
 }
 
-export const luggage = (state = initialState, action) => {
+export const reservation = (state = initialState, action) => {
 
     const { type, payload } = action
     switch(type){
-        case 'SET_LUGGAGE_SIZE': {
-            const { data : { price, size, qty, total} } = payload
+        case 'SET_DESTINATION': {
+            const { data : { pickup, dropoff } } = payload
             return {
                 ...state,
-                size: size,
-                price: price,
-                total: total,
-                qty: qty
+                pickup: pickup,
+                dropoff: dropoff
             }
         }
 
-        case 'SET_LUGGAGE_QTY': {
-            const { data: { total, qty }} = payload
+        case 'SEARCH_DESTINATION': {
+            const { data} = payload
             return {
                 ...state,
-                total: total,
-                qty: qty
+                origin: data[0],
+                destination: data[1]
             }
         }
 
-        case 'SET_DATE_RESERVATION':
+        case 'SET_SUMMARY': {
+            const { data: { duration, distance, price} } = payload
+            return {
+                ...state,
+                duration: duration,
+                distance: distance,
+                price: price
+            }
+        }
+
+        case 'SET_CENTER_LOCATION': {
+            const { center } = payload
+            return {
+                ...state,
+                center: center
+            }
+        }
+
+        case 'SET_USER_LOCATION': {
             const { data } = payload
             return {
                 ...state,
-                reservation: data
+                userLocation: data
             }
+        }
 
         default:
             return state
