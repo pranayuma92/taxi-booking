@@ -7,8 +7,12 @@ const API_KEY = process.env.REACT_APP_API_KEY
 
 export const searchDestinationRequest = (pickup, dropoff) => async (dispatch, getState) => {
     try {
-        const destination = { pickup, dropoff }
         const { reservation: { center, userLocation }} = getState()
+        
+        const destination = { 
+            pickup: pickup.concat(`, ${userLocation.address.county}`), 
+            dropoff: dropoff.concat(`, ${userLocation.address.county}`)
+        }
     
         dispatch(setDestination(destination))
         Promise.all([

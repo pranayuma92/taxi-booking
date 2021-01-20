@@ -104,7 +104,6 @@ const Driving = ({ center, origin, destination, distance, duration, onSetSummary
         const group = new  H.map.Group()
 
         let i
-        let j
 
         route.sections.forEach((section) => {
             let poly = H.geo.LineString.fromFlexiblePolyline(section.polyline).getLatLngAltArray()

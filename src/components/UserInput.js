@@ -1,15 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { searchDestinationRequest } from '../store/thunks'
 
-const UserInput = ({ pickup, dropoff, price, userLocation: { city, country, countryName }, onSeachDestination }) => {
-    const [pickupPoint, setPickup] = useState(pickup)
-    const [dropoffPoint, setDropoff] = useState(dropoff)
+const UserInput = ({ pickup, dropoff, price, userLocation, onSeachDestination }) => {
+    const [pickupPoint, setPickup] = useState(null)
+    const [dropoffPoint, setDropoff] = useState(null)
+
+    useEffect(() => {
+        setPickup(pickup)
+        setDropoff(dropoff)
+    }, [pickup, dropoff])
 
     const startSearch = () => {
-        onSeachDestination(pickupPoint, dropoffPoint)
+        onSeachDestination(
+            pickupPoint.split(', ')[0], 
+            dropoffPoint.split(', ')[0]
+        )
     }
-
+    
     return (
         <div className="card">
             <div className="card-body">
@@ -19,12 +27,28 @@ const UserInput = ({ pickup, dropoff, price, userLocation: { city, country, coun
                 <div className="input-location-container">
                     <div className="input-location-field">
                         <div className="form-group">
-                            <input type="text" className="form-control" placeholder="Enter pick-up location" value={pickupPoint} onChange={(e) => setPickup(e.target.value)}/>
+                            <input 
+                                type="text" 
+                                className="form-control" 
+                                placeholder="Enter pick-up location" 
+                                value={pickupPoint} 
+                                onChange={e => setPickup(e.target.value)}
+                                onFocus={e => e.target.value = null}
+                                onBlur={e => e.target.value = pickupPoint}
+                            />
                         </div>
                     </div>
                     <div className="input-location-field">
                         <div className="form-group">
-                            <input type="text" className="form-control" placeholder="Enter drop-off location" value={dropoffPoint} onChange={(e) => setDropoff(e.target.value)} />
+                            <input 
+                                type="text" 
+                                className="form-control" 
+                                placeholder="Enter drop-off location" 
+                                value={dropoffPoint} 
+                                onChange={e => setDropoff(e.target.value)}
+                                onFocus={e => e.target.value = null}
+                                onBlur={e => e.target.value = dropoffPoint} 
+                            />
                         </div>
                     </div>
                     <div className="input-location-field">
