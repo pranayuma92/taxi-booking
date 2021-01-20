@@ -1,5 +1,5 @@
 import { setDestination, searchDestination, setSummary, setUserLocation, setCenterLocation } from './actions'
-import { replaceChar, toKM, toMMSS, getPrice } from '../components/Helper'
+import { replaceChar, toKM, toMMSS, getPrice, getMapUrl } from '../components/Helper'
 
 const URL = process.env.REACT_APP_GEOCODING_URL
 const REVGEOCODING_URL = process.env.REACT_APP_REVGEOCODING_URL
@@ -8,30 +8,23 @@ const API_KEY = process.env.REACT_APP_API_KEY
 export const searchDestinationRequest = (pickup, dropoff) => async (dispatch, getState) => {
     try {
         const destination = { pickup, dropoff }
-        const { reservation: { center }} = getState()
+        const { reservation: { center, userLocation }} = getState()
     
         dispatch(setDestination(destination))
-        const orResponse = await fetch(`${URL}?at=${center.lat},${center.lng}&countryCode=IDN&q=${replaceChar(pickup)}&apiKey=${API_KEY}`)
-        const orResult = await orResponse.json()
-    
-        const desResponse = await fetch(`${URL}?at=${center.lat},${center.lng}&countryCode=IDN&q=${replaceChar(dropoff)}&apiKey=${API_KEY}`)
-        const desResult = await desResponse.json()
-    
-    
-        if(orResult && desResult) {
-            const orLat = orResult.items[0].position.lat
-            const orLng = orResult.items[0].position.lng
-    
-            const desLat = desResult.items[0].position.lat
-            const desLng = desResult.items[0].position.lng
-    
+        Promise.all([
+            fetch(getMapUrl(center.lat, center.lng, userLocation.address.countryCode, pickup)).then(resp => resp.json()),
+            fetch(getMapUrl(center.lat, center.lng, userLocation.address.countryCode, dropoff)).then(resp => resp.json())
+        ]).then(value => {
+            const origin = value[0].items[0].position
+            const dest = value[1].items[0].position
+
             dispatch(
                 searchDestination([
-                    `${orLat},${orLng}`,
-                    `${desLat},${desLng}`
+                    `${origin.lat},${origin.lng}`,
+                    `${dest.lat},${dest.lng}`
                 ])
             )
-        }
+        }).catch(err => dispatch(displayAlert(err)))
     } catch(err){
         dispatch(displayAlert(err))
     }
