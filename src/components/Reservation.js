@@ -6,8 +6,7 @@ import { setUserLocationRequest } from '../store/thunks'
 
 const Reservation = ({ onSetUserLocation }) => {
     useLayoutEffect(() => {
-        window.navigator.geolocation.getCurrentPosition((position) => {
-            console.log(position.coords.latitude)
+        navigator.geolocation.getCurrentPosition((position) => {
             onSetUserLocation(position.coords.latitude, position.coords.longitude)
         })
     }, [])
