@@ -30,7 +30,7 @@ const UserInput = ({ pickup, dropoff, price, userLocation, onSeachDestination })
                             <input 
                                 type="text" 
                                 className="form-control" 
-                                placeholder="Enter pick-up location" 
+                                placeholder={pickupPoint ? pickupPoint : "Enter pick-up location"} 
                                 value={pickupPoint} 
                                 onChange={e => setPickup(e.target.value)}
                                 onFocus={e => e.target.value = null}
@@ -43,7 +43,7 @@ const UserInput = ({ pickup, dropoff, price, userLocation, onSeachDestination })
                             <input 
                                 type="text" 
                                 className="form-control" 
-                                placeholder="Enter drop-off location" 
+                                placeholder={dropoffPoint ? dropoffPoint : "Enter drop-off location"} 
                                 value={dropoffPoint} 
                                 onChange={e => setDropoff(e.target.value)}
                                 onFocus={e => e.target.value = null}
